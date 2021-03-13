@@ -19,7 +19,8 @@ if __name__ == "__main__":
     ai = Ai(aiName, aiSymbol, board, player)
 
     # instantiating moderator
-    mod = Mod(board, player, ai)
+    banner = "new_tttBanner.txt"
+    mod = Mod(board, player, ai, banner)
     mod.welcomeMessage()
 
     while not mod.determineWinner():

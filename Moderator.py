@@ -123,6 +123,8 @@ class Mod:
         banner = open(banner_file_path, "r")
         for line in banner:
             cprint(line.strip("\n"), 'yellow', attrs=['bold'])
+        names: str = "By: Casper Haan (1969853haan) & Luc Hundscheid (ik weet je studentnummer niet meer)"
+        print(f"\n{names}\n")
         cprint(72 * "~", 'magenta', attrs=['bold'])
         print()
         self.board.printBoard()
