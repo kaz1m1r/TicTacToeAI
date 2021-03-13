@@ -2,6 +2,9 @@ from Player import Player
 from Board import Board
 import termcolor
 import math
+from typing import Union, List
+
+T = Union[int, float]
 
 
 class Ai(Player):
@@ -19,18 +22,18 @@ class Ai(Player):
         super().__init__(name, symbol, board)
 
         # setting instance variables of the Ai class
-        self.opponent = opponent
-        self.symbol = termcolor.colored(symbol, 'yellow')
+        self.opponent: Player = opponent
+        self.symbol: str = termcolor.colored(symbol, 'yellow')
 
-    def makeBestMove(self):
+    def makeBestMove(self) -> None:
         """
         Use the minimax method to find the Ai's optimal move given the current board
         :return: None
         """
 
         # best return value (1, -1 or 0)
-        bestVal = - math.inf
-        bestPosition = -math.inf
+        bestVal: T = - math.inf
+        bestPosition: T = -math.inf
 
         # traverse all positions
         for position in range(len(self.board.positions)):
@@ -39,12 +42,12 @@ class Ai(Player):
             if self.board.positions[position] == " ":
 
                 # make move
-                self.board.positions[position] = self.getSymbol()
+                self.board.positions[position]: str = self.getSymbol()
 
-                moveValue = self.minimax(0, False)
+                moveValue: int = self.minimax(0, False)
 
                 # undo move
-                self.board.positions[position] = " "
+                self.board.positions[position]: str = " "
 
                 if moveValue > bestVal:
                     bestPosition = position
@@ -52,18 +55,18 @@ class Ai(Player):
 
         self.insertSymbol(bestPosition)
 
-    def minimax(self, depth: int, is_maximizer: bool):
+    def minimax(self, depth: int, is_maximizer: bool) -> T:
         """
         Minimax search algorithm that's used to determine whether its beneficial or not for the Ai
          to place it's symbol at the current position of the board
         :param depth: specifies the depth of the tree, in this case the open positions
         :param is_maximizer: specifies whether its the maximizer's turn (Ai) or the minimizer's turn (opponent)
-        :return: int
+        :return: int or float
         """
 
         # determine whether the current board has a winner, loser or if it's not decided and save
         # the outcome to a variable 'score'
-        score = self.checkForWinner()
+        score: T = self.checkForWinner()
 
         # return score if the Ai wins the game
         if score == 1:
@@ -79,7 +82,7 @@ class Ai(Player):
 
         # if it's the maximizer's move (AI's move)
         if is_maximizer:
-            best = - math.inf
+            best: T = - math.inf
 
             # traverse all cells
             for position in range(len(self.board.positions)):
@@ -87,17 +90,17 @@ class Ai(Player):
                 # place symbol if an available position is found on the board
                 if self.board.positions[position] == " ":
                     # make move
-                    self.board.positions[position] = self.getSymbol()
+                    self.board.positions[position]: str = self.getSymbol()
 
-                    best = max(best, self.minimax(depth + 1, not is_maximizer))
+                    best: T = max(best, self.minimax(depth + 1, not is_maximizer))
 
                     # undo the move
-                    self.board.positions[position] = " "
+                    self.board.positions[position]: T = " "
             return best
 
         # if it's the minimizer's turn (opponent's move)
         else:
-            best = math.inf
+            best: T = math.inf
 
             # traverse all cells
             for position in range(len(self.board.positions)):
@@ -105,24 +108,24 @@ class Ai(Player):
                 # place symbol if an available position is found on the board
                 if self.board.positions[position] == " ":
                     # make move
-                    self.board.positions[position] = self.opponent.getSymbol()
+                    self.board.positions[position]: str = self.opponent.getSymbol()
 
-                    best = min(best, self.minimax(depth + 1, not is_maximizer))
+                    best: T = min(best, self.minimax(depth + 1, not is_maximizer))
 
                     # undo the move
-                    self.board.positions[position] = " "
+                    self.board.positions[position]: str = " "
             return best
 
-    def checkForWinner(self):
+    def checkForWinner(self) -> T:
         """
         Check rows, columns and diagonals for winner
-        :return: int
+        :return: int or float
         """
 
         '''checking rows for a winner'''
 
         # saving the rows of the board in a variable
-        rows = self.board.getRows()
+        rows: List[List[str]] = self.board.getRows()
 
         # iterating through the rows
         for row in rows:
@@ -138,7 +141,7 @@ class Ai(Player):
         '''checking columns for a winner'''
 
         # saving the columns of the board in a variable
-        columns = self.board.getColumns()
+        columns: List[List[str]] = self.board.getColumns()
 
         # iterating through the columns
         for column in columns:
@@ -154,7 +157,7 @@ class Ai(Player):
         '''checking diagonals for a winner'''
 
         # save the diagonals of the board in a variable
-        diagonals = self.board.getDiagonals()
+        diagonals: List[List[str]] = self.board.getDiagonals()
 
         # iterating through the diagonals
         for diagonal in diagonals:
@@ -170,7 +173,7 @@ class Ai(Player):
         # return 0 if neither the Ai nor the opponent has won
         return 0
 
-    def areMovesLeft(self):
+    def areMovesLeft(self) -> bool:
         """
         Check if there are empty cells left in the board
         :return: boolean

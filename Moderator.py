@@ -6,6 +6,10 @@ from AI import Ai
 from Board import Board
 from Player import Player
 
+from typing import Optional, List
+
+D = Optional[bool]
+
 
 class Mod:
 
@@ -28,28 +32,28 @@ class Mod:
         # which player has the current turn
         self.whoseTurn = self.player
 
-    def checkDraw(self):
+    def checkDraw(self) -> D:
         """
         Check if the game ends in a draw
-        :return: bool
+        :return: bool or None
         """
         if self.board.positions.count(" ") == 0:
             print("DRAW!")
             return True
 
-    def determineWinner(self):
+    def determineWinner(self) -> bool:
         """
         Determining if the current board has a winner
         :return: bool
         """
 
         # Saving the board's rows, columns and diagonals in variables
-        rows = self.board.getRows()
-        columns = self.board.getColumns()
-        diagonals = self.board.getDiagonals()
+        rows: List[List[str]] = self.board.getRows()
+        columns: List[List[str]] = self.board.getColumns()
+        diagonals: List[List[str]] = self.board.getDiagonals()
 
         # saving the board's rows, columns and diagonals in one list
-        lines = [row for row in rows]
+        lines: List[List[str]] = [row for row in rows]
         for column in columns:
             lines.append(column)
         for diagonal in diagonals:
@@ -61,16 +65,16 @@ class Mod:
                 if line.count(symbol) == 3:
                     # human player wins
                     if symbol == self.getPlayerSymbol():
-                        winner = self.player
+                        winner: Player = self.player
 
                     # AI wins
                     else:
-                        winner = self.ai
-                    print(f"THE WINNER IS {winner.getName()}")
+                        winner: Ai = self.ai
+                    print(f"{winner.getName()} wins!")
                     return True
         return False
 
-    def requestMove(self):
+    def requestMove(self) -> None:
         """
         This method asks the player for a move when it's the players turn.
         When its the AI's turn this method makes the AI perform a move
@@ -79,7 +83,7 @@ class Mod:
 
         # player's turn to make a move
         if self.whoseTurn == self.player:
-            position = int(input(f"{self.player.getName()}'s turn : "))
+            position: int = int(input(f"{self.player.getName()}'s turn : "))
             self.player.insertSymbol(position)
             self.whoseTurn = self.ai
 
@@ -89,31 +93,32 @@ class Mod:
             self.ai.makeBestMove()
             self.whoseTurn = self.player
 
-    def getPlayerSymbol(self):
+    def getPlayerSymbol(self) -> str:
         """
         Return the symbol that corresponds with the human player
         :return: str
         """
         return self.player.getSymbol()
 
-    def getAiSymbol(self):
+    def getAiSymbol(self) -> str:
         """
         Return the symbol that corresponds with the AI
         :return: str
         """
         return self.ai.getSymbol()
 
-    def welcomeMessage(self):
+    def welcomeMessage(self) -> None:
         """
         Print a nice welcome message and the initial empty board
         :return: None
         """
 
         # creating absolute path to the the banner that was passed in the constructor
-        runtime_file_path = os.path.abspath(__file__)
-        runtime_file_folder = os.path.dirname(runtime_file_path)
-        banner_file_path = os.path.join(runtime_file_folder, self.banner)
+        runtime_file_path: str = os.path.abspath(__file__)
+        runtime_file_folder: str = os.path.dirname(runtime_file_path)
+        banner_file_path: str = os.path.join(runtime_file_folder, self.banner)
 
+        # printing actual welcome message
         cprint("WELCOME TO:", 'red', attrs=['bold'])
         banner = open(banner_file_path, "r")
         for line in banner:

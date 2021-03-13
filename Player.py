@@ -13,14 +13,14 @@ class Player:
         """
 
         # setting instance variables of the Player class
-        self.name = name
-        self.symbol = termcolor.colored(symbol, "red")
-        self.board = board
+        self.name: str = name
+        self.symbol: str = termcolor.colored(symbol, "red")
+        self.board: Board = board
 
-    def insertSymbol(self, position):
+    def insertSymbol(self, position: int) -> None:
         """
-        Player's method to insert his/her symbol on the board
-        :param position:
+        Player's method to insert his/her symbol on the board on the specified position
+        :param position: integer
         :return: None
         """
         if self.board.positions[position] == " ":
@@ -33,14 +33,14 @@ class Player:
                 position = int(input(f"Insert an integer! (1 - 9) : "))
                 self.insertSymbol(position)
 
-    def getName(self):
+    def getName(self) -> str:
         """
         Return the name of the player instance
         :return: str
         """
         return self.name
 
-    def getSymbol(self):
+    def getSymbol(self) -> str:
         """
         Return the symbol of the player instance
         :return: str
